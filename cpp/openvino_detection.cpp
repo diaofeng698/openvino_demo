@@ -6,7 +6,31 @@ OpenvinoInference::OpenvinoInference(file_name_t input_model, file_name_t input_
     input_image_path_ = input_image_path;
     device_name_ = device_name;
     std::cout << "Initial Successfully! " << std::endl;
+    struct timeval tv1, tv2;
+    gettimeofday(&tv1, NULL);
     Inference();
+
+    gettimeofday(&tv2, NULL);
+    double diff_time = ((double)(tv2.tv_usec - tv1.tv_usec) / 1000.0) + ((double)(tv2.tv_sec - tv1.tv_sec) * 1000.0);
+    std::cout << "Openvino Whole Infer Time [ms] : " << diff_time << std::endl;
+}
+
+OpenvinoInference::OpenvinoInference(file_name_t input_model, int rawdata_height, int rawdata_width,
+                                     std::string device_name, void *data)
+
+{
+    input_model_ = input_model;
+    device_name_ = device_name;
+    rawdata_height_ = rawdata_height;
+    rawdata_width_ = rawdata_width;
+    data_ = data;
+    std::cout << "Initial Successfully! " << std::endl;
+    struct timeval tv1, tv2;
+    gettimeofday(&tv1, NULL);
+    Inference();
+    gettimeofday(&tv2, NULL);
+    double diff_time = ((double)(tv2.tv_usec - tv1.tv_usec) / 1000.0) + ((double)(tv2.tv_sec - tv1.tv_sec) * 1000.0);
+    std::cout << "Openvino Whole Infer Time [ms] : " << diff_time << std::endl;
 }
 
 OpenvinoInference::~OpenvinoInference()
@@ -16,24 +40,17 @@ OpenvinoInference::~OpenvinoInference()
 
 bool OpenvinoInference::Inference()
 {
-    try
-    {
-        if (ReadModel())
-            return EXIT_FAILURE;
-        if (ConfigureInputOoutput())
-            return EXIT_FAILURE;
-        LoadingModel();
-        CreateInferRequest();
-        if (PrepareInput())
-            return EXIT_FAILURE;
-        DoSyncInference();
-        ProcessOutput();
-    }
-    catch (const std::exception &ex)
-    {
-        std::cerr << ex.what() << std::endl;
+
+    if (ReadModel())
         return EXIT_FAILURE;
-    }
+    if (ConfigureInputOoutput())
+        return EXIT_FAILURE;
+    LoadingModel();
+    CreateInferRequest();
+    if (PrepareInput())
+        return EXIT_FAILURE;
+    DoSyncInference();
+    ProcessOutput();
     std::cout << "Openvino Inference Finished" << std::endl;
     return EXIT_SUCCESS;
 }
@@ -97,37 +114,57 @@ void OpenvinoInference::CreateInferRequest()
 bool OpenvinoInference::PrepareInput()
 {
 
-    cv::Mat image = imread_t(input_image_path_);
+    Blob::Ptr inputBlob = infer_request_.GetBlob(input_name_);
+    SizeVector dims = inputBlob->getTensorDesc().getDims();
 
-    if (!image.data)
-    {
-        std::cout << "Frame Load Failed" << std::endl;
-        return EXIT_FAILURE;
-    }
-
-    std::cout << "raw inputH " << image.rows << " inputW " << image.cols << " inputChannel " << image.channels()
-              << std::endl;
+    modeldata_batch_ = dims[0];
+    modeldata_height_ = dims[1];
+    modeldata_width_ = dims[2];
+    modeldata_num_channels_ = dims[3];
 
     cv::Mat resized_img;
-    cv::resize(image, resized_img, cv::Size(224, 224));
-    std::cout << "resized inputH " << resized_img.rows << " inputW " << resized_img.cols << " inputChannel "
-              << resized_img.channels() << std::endl;
+
+    if (input_image_path_ == "")
+    {
+
+        if (data_ == nullptr)
+        {
+            std::cout << "Input Frame Load Failed" << std::endl;
+            return EXIT_FAILURE;
+        }
+        std::cout << "raw inputH " << rawdata_height_ << " inputW " << rawdata_width_ << " inputChannel " << 3
+                  << std::endl;
+        cv::Mat input_frame(rawdata_height_, rawdata_width_, CV_8UC3, data_);
+
+        cv::resize(input_frame, resized_img, cv::Size(modeldata_width_, modeldata_height_));
+        std::cout << "resized inputH " << resized_img.rows << " inputW " << resized_img.cols << " inputChannel "
+                  << resized_img.channels() << std::endl;
+    }
+    else
+    {
+        cv::Mat input_file = imread_t(input_image_path_);
+        if (!input_file.data)
+        {
+            std::cout << "Image File Load Failed" << std::endl;
+            return EXIT_FAILURE;
+        }
+        std::cout << "raw inputH " << input_file.rows << " inputW " << input_file.cols << " inputChannel "
+                  << input_file.channels() << std::endl;
+
+        cv::resize(input_file, resized_img, cv::Size(modeldata_width_, modeldata_height_));
+        std::cout << "resized inputH " << resized_img.rows << " inputW " << resized_img.cols << " inputChannel "
+                  << resized_img.channels() << std::endl;
+    }
 
     cv::Mat gray_img;
     cv::cvtColor(resized_img, gray_img, cv::COLOR_BGR2GRAY);
     std::cout << "gray inputH " << gray_img.rows << " inputW " << gray_img.cols << " inputChannel "
               << gray_img.channels() << std::endl;
 
-    Blob::Ptr inputBlob = infer_request_.GetBlob(input_name_);
-    SizeVector dims = inputBlob->getTensorDesc().getDims();
-
-    batch = dims[0];
-    height = dims[1];
-    width = dims[2];
-    num_channels = dims[3];
-
     Blob::Ptr outputBlob = infer_request_.GetBlob(output_name_);
     SizeVector output_dims = outputBlob->getTensorDesc().getDims();
+
+    class_num_ = output_dims[1];
 
     MemoryBlob::Ptr minput = as<MemoryBlob>(inputBlob);
     if (!minput)
@@ -148,14 +185,14 @@ bool OpenvinoInference::PrepareInput()
         return EXIT_FAILURE;
     }
 
-    for (int b = 0, volImg = num_channels * height * width; b < batch; b++)
+    for (int b = 0, volImg = modeldata_num_channels_ * modeldata_height_ * modeldata_width_; b < modeldata_batch_; b++)
     {
-        for (int idx = 0, volChl = height * width; idx < volChl; idx++)
+        for (int idx = 0, volChl = modeldata_height_ * modeldata_width_; idx < volChl; idx++)
         {
 
-            for (int c = 0; c < num_channels; ++c)
+            for (int c = 0; c < modeldata_num_channels_; ++c)
             {
-                data[b * volImg + idx * num_channels + c] = gray_img.data[idx];
+                data[b * volImg + idx * modeldata_num_channels_ + c] = gray_img.data[idx];
             }
         }
     }
@@ -173,6 +210,10 @@ void OpenvinoInference::ProcessOutput()
 {
     Blob::Ptr output = infer_request_.GetBlob(output_name_);
     // Print classification results
-    ClassificationResult_t classificationResult(output, {input_image_path_});
+    ClassificationResult_t classificationResult(output, {input_image_path_}, modeldata_batch_, class_num_);
     classificationResult.print();
+    max_idx_ = classificationResult._max_idx;
+    max_prob_ = classificationResult._max_prob;
+
+    std::cout << "Inference Result ID : " << max_idx_ << " Conf : " << max_prob_ << std::endl;
 }

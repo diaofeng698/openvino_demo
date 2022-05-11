@@ -22,6 +22,10 @@
  */
 template <class strType = std::string> class ClassificationResultT
 {
+  public:
+    int _max_idx{0};
+    float _max_prob{0.0};
+
   private:
     const std::string _classidStr = "classid";
     const std::string _probabilityStr = "probability";
@@ -123,7 +127,7 @@ template <class strType = std::string> class ClassificationResultT
 
   public:
     explicit ClassificationResultT(InferenceEngine::Blob::Ptr output_blob, std::vector<strType> image_names = {},
-                                   size_t batch_size = 1, size_t num_of_top = 10, std::vector<std::string> labels = {})
+                                   size_t batch_size = 1, size_t num_of_top = 6, std::vector<std::string> labels = {})
         : _nTop(num_of_top), _outBlob(std::move(output_blob)), _labels(std::move(labels)),
           _imageNames(std::move(image_names)), _batchSize(batch_size), _results()
     {
@@ -144,10 +148,13 @@ template <class strType = std::string> class ClassificationResultT
         for (unsigned int image_id = 0; image_id < _batchSize; ++image_id)
         {
             std::wstring out(_imageNames[image_id].begin(), _imageNames[image_id].end());
-            std::wcout << L"Image " << out;
-            std::wcout.flush();
-            std::wcout.clear();
-            std::wcout << std::endl << std::endl;
+            if (out != L"")
+            {
+                std::wcout << L"Image File" << out;
+                std::wcout.flush();
+                std::wcout.clear();
+                std::wcout << std::endl;
+            }
             printHeader();
 
             for (size_t id = image_id * _nTop, cnt = 0; id < (image_id + 1) * _nTop; ++cnt, ++id)
@@ -171,6 +178,11 @@ template <class strType = std::string> class ClassificationResultT
                 std::cout << std::setw(static_cast<int>(_classidStr.length())) << std::left << _results.at(id) << " ";
                 std::cout << std::left << std::setw(static_cast<int>(_probabilityStr.length())) << std::fixed << result;
 
+                if (_max_prob < result)
+                {
+                    _max_prob = result;
+                    _max_idx = _results.at(id);
+                }
                 if (!_labels.empty())
                 {
                     std::cout << " " + _labels[_results.at(id)];
