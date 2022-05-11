@@ -1,0 +1,375 @@
+<?xml version="1.0"?>
+<mapping>
+	<map>
+		<framework name="input_1" output_port_id="input_1" />
+		<IR name="input_1" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv1/Conv2D__6" output_port_id="StatefulPartitionedCall/model/conv1/Conv2D__6:0" />
+		<IR name="StatefulPartitionedCall/model/conv1/Conv2D__6" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv1/Conv2D_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv1/Conv2D_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv1/Conv2D_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv1/Conv2D" output_port_id="StatefulPartitionedCall/model/conv1_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv1/Conv2D" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv1_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv1_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv1_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_1/depthwise_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_dw_1/depthwise_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_1/depthwise_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_1/depthwise" output_port_id="StatefulPartitionedCall/model/conv_dw_1_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_1/depthwise" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_1_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_dw_1_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_1_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_1/Conv2D_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_pw_1/Conv2D_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_1/Conv2D_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_1/Conv2D" output_port_id="StatefulPartitionedCall/model/conv_pw_1_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_1/Conv2D" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_1_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_pw_1_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_1_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pad_2/Pad" output_port_id="StatefulPartitionedCall/model/conv_pad_2/Pad:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pad_2/Pad" output_port_id="4" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_2/depthwise_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_dw_2/depthwise_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_2/depthwise_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_2/depthwise" output_port_id="StatefulPartitionedCall/model/conv_dw_2_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_2/depthwise" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_2_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_dw_2_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_2_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_2/Conv2D_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_pw_2/Conv2D_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_2/Conv2D_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_2/Conv2D" output_port_id="StatefulPartitionedCall/model/conv_pw_2_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_2/Conv2D" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_2_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_pw_2_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_2_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_3/depthwise_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_dw_3/depthwise_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_3/depthwise_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_3/depthwise" output_port_id="StatefulPartitionedCall/model/conv_dw_3_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_3/depthwise" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_3_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_dw_3_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_3_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_3/Conv2D_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_pw_3/Conv2D_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_3/Conv2D_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_3/Conv2D" output_port_id="StatefulPartitionedCall/model/conv_pw_3_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_3/Conv2D" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_3_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_pw_3_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_3_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pad_4/Pad" output_port_id="StatefulPartitionedCall/model/conv_pad_4/Pad:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pad_4/Pad" output_port_id="4" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_4/depthwise_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_dw_4/depthwise_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_4/depthwise_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_4/depthwise" output_port_id="StatefulPartitionedCall/model/conv_dw_4_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_4/depthwise" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_4_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_dw_4_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_4_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_4/Conv2D_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_pw_4/Conv2D_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_4/Conv2D_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_4/Conv2D" output_port_id="StatefulPartitionedCall/model/conv_pw_4_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_4/Conv2D" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_4_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_pw_4_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_4_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_5/depthwise_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_dw_5/depthwise_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_5/depthwise_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_5/depthwise" output_port_id="StatefulPartitionedCall/model/conv_dw_5_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_5/depthwise" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_5_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_dw_5_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_5_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_5/Conv2D_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_pw_5/Conv2D_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_5/Conv2D_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_5/Conv2D" output_port_id="StatefulPartitionedCall/model/conv_pw_5_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_5/Conv2D" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_5_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_pw_5_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_5_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pad_6/Pad" output_port_id="StatefulPartitionedCall/model/conv_pad_6/Pad:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pad_6/Pad" output_port_id="4" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_6/depthwise_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_dw_6/depthwise_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_6/depthwise_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_6/depthwise" output_port_id="StatefulPartitionedCall/model/conv_dw_6_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_6/depthwise" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_6_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_dw_6_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_6_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_6/Conv2D_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_pw_6/Conv2D_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_6/Conv2D_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_6/Conv2D" output_port_id="StatefulPartitionedCall/model/conv_pw_6_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_6/Conv2D" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_6_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_pw_6_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_6_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_7/depthwise_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_dw_7/depthwise_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_7/depthwise_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_7/depthwise" output_port_id="StatefulPartitionedCall/model/conv_dw_7_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_7/depthwise" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_7_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_dw_7_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_7_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_7/Conv2D_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_pw_7/Conv2D_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_7/Conv2D_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_7/Conv2D" output_port_id="StatefulPartitionedCall/model/conv_pw_7_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_7/Conv2D" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_7_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_pw_7_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_7_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_8/depthwise_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_dw_8/depthwise_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_8/depthwise_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_8/depthwise" output_port_id="StatefulPartitionedCall/model/conv_dw_8_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_8/depthwise" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_8_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_dw_8_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_8_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_8/Conv2D_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_pw_8/Conv2D_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_8/Conv2D_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_8/Conv2D" output_port_id="StatefulPartitionedCall/model/conv_pw_8_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_8/Conv2D" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_8_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_pw_8_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_8_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_9/depthwise_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_dw_9/depthwise_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_9/depthwise_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_9/depthwise" output_port_id="StatefulPartitionedCall/model/conv_dw_9_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_9/depthwise" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_9_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_dw_9_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_9_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_9/Conv2D_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_pw_9/Conv2D_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_9/Conv2D_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_9/Conv2D" output_port_id="StatefulPartitionedCall/model/conv_pw_9_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_9/Conv2D" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_9_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_pw_9_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_9_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_10/depthwise_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_dw_10/depthwise_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_10/depthwise_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_10/depthwise" output_port_id="StatefulPartitionedCall/model/conv_dw_10_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_10/depthwise" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_10_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_dw_10_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_10_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_10/Conv2D_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_pw_10/Conv2D_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_10/Conv2D_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_10/Conv2D" output_port_id="StatefulPartitionedCall/model/conv_pw_10_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_10/Conv2D" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_10_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_pw_10_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_10_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_11/depthwise_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_dw_11/depthwise_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_11/depthwise_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_11/depthwise" output_port_id="StatefulPartitionedCall/model/conv_dw_11_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_11/depthwise" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_11_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_dw_11_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_11_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_11/Conv2D_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_pw_11/Conv2D_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_11/Conv2D_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_11/Conv2D" output_port_id="StatefulPartitionedCall/model/conv_pw_11_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_11/Conv2D" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_11_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_pw_11_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_11_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pad_12/Pad" output_port_id="StatefulPartitionedCall/model/conv_pad_12/Pad:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pad_12/Pad" output_port_id="4" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_12/depthwise_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_dw_12/depthwise_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_12/depthwise_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_12/depthwise" output_port_id="StatefulPartitionedCall/model/conv_dw_12_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_12/depthwise" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_12_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_dw_12_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_12_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_12/Conv2D_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_pw_12/Conv2D_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_12/Conv2D_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_12/Conv2D" output_port_id="StatefulPartitionedCall/model/conv_pw_12_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_12/Conv2D" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_12_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_pw_12_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_12_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_13/depthwise_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_dw_13/depthwise_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_13/depthwise_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_13/depthwise" output_port_id="StatefulPartitionedCall/model/conv_dw_13_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_13/depthwise" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_dw_13_relu/Relu6" output_port_id="StatefulPartitionedCall/model/conv_dw_13_relu/Relu6:0" />
+		<IR name="StatefulPartitionedCall/model/conv_dw_13_relu/Relu6" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_13/Conv2D_weights_fused_bn" output_port_id="StatefulPartitionedCall/model/conv_pw_13/Conv2D_weights_fused_bn" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_13/Conv2D_weights_fused_bn" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/conv_pw_13/Conv2D" output_port_id="StatefulPartitionedCall/model/conv_pw_13_bn/FusedBatchNormV3:0" />
+		<IR name="StatefulPartitionedCall/model/conv_pw_13/Conv2D" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/global_average_pooling2d/Mean/reduce" output_port_id="StatefulPartitionedCall/model/global_average_pooling2d/Mean:0" />
+		<IR name="StatefulPartitionedCall/model/global_average_pooling2d/Mean/reduce" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/global_average_pooling2d/Mean_Squeeze__274" output_port_id="StatefulPartitionedCall/model/global_average_pooling2d/Mean_Squeeze__274:0" />
+		<IR name="StatefulPartitionedCall/model/global_average_pooling2d/Mean_Squeeze__274" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/dense/MatMul/ReadVariableOp:0" output_port_id="StatefulPartitionedCall/model/dense/MatMul/ReadVariableOp:0" />
+		<IR name="StatefulPartitionedCall/model/dense/MatMul/ReadVariableOp:0" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/dense/MatMul" output_port_id="StatefulPartitionedCall/model/dense/MatMul:0" />
+		<IR name="StatefulPartitionedCall/model/dense/MatMul" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/dense/BiasAdd/ReadVariableOp:0" output_port_id="StatefulPartitionedCall/model/dense/BiasAdd/ReadVariableOp:0" />
+		<IR name="StatefulPartitionedCall/model/dense/BiasAdd/ReadVariableOp:0" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="StatefulPartitionedCall/model/dense/BiasAdd" output_port_id="StatefulPartitionedCall/model/dense/BiasAdd:0" />
+		<IR name="StatefulPartitionedCall/model/dense/BiasAdd" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="dense" output_port_id="dense" />
+		<IR name="dense" output_port_id="2" />
+	</map>
+</mapping>
