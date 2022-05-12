@@ -212,8 +212,9 @@ void OpenvinoInference::ProcessOutput()
     // Print classification results
     ClassificationResult_t classificationResult(output, {input_image_path_}, modeldata_batch_, class_num_);
     classificationResult.print();
-    max_idx_ = classificationResult._max_idx;
-    max_prob_ = classificationResult._max_prob;
+    openvino_result_.class_idx = classificationResult._max_idx;
+    openvino_result_.probability = classificationResult._max_prob;
 
-    std::cout << "Inference Result ID : " << max_idx_ << " Conf : " << max_prob_ << std::endl;
+    std::cout << "Inference Result ID : " << openvino_result_.class_idx << " Conf : " << openvino_result_.probability
+              << std::endl;
 }

@@ -16,6 +16,12 @@ using namespace InferenceEngine;
 #define imread_t cv::imread
 #define ClassificationResult_t ClassificationResult
 
+struct OpenvinoInferenceResult
+{
+    int class_idx;
+    float probability;
+};
+
 class OpenvinoInference
 {
   public:
@@ -31,9 +37,8 @@ class OpenvinoInference
     size_t rawdata_height_{0};
     size_t rawdata_width_{0};
     void *data_;
-    int max_idx_{0};
-    float max_prob_{0.0};
     int class_num_{0};
+    OpenvinoInferenceResult openvino_result_;
     OpenvinoInference(file_name_t input_model, file_name_t input_image_path, std::string device_name);
     OpenvinoInference(file_name_t input_model, int rawdata_height, int rawdata_width, std::string device_name,
                       void *data);
