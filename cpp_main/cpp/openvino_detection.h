@@ -27,33 +27,31 @@ class OpenvinoInference
     file_name_t input_model_;
     file_name_t input_image_path_{""};
     std::string device_name_;
+    OpenvinoInferenceResult openvino_result_;
+    OpenvinoInference(file_name_t input_model, std::string device_name);
+    ~OpenvinoInference();
+    bool Initialization();
+    bool Inference(int rawdata_height, int rawdata_width, auto *rawdata);
+    bool Inference(file_name_t input_image_path);
+
+  private:
+    Core ie_;
+    CNNNetwork network_;
+    ExecutableNetwork executable_network_;
+    InferRequest infer_request_;
+    bool ReadModel();
+    bool ConfigureInputOutput();
+    void LoadingModel();
+    void CreateInferRequest();
+    bool PrepareInput(int rawdata_height, int rawdata_width, auto *rawdata);
+    bool PrepareInput(file_name_t input_image_path);
+    void DoSyncInference();
+    void ProcessOutput();
     std::string input_name_;
     std::string output_name_;
     size_t modeldata_batch_{0};
     size_t modeldata_height_{0};
     size_t modeldata_width_{0};
     size_t modeldata_num_channels_{0};
-    size_t rawdata_height_{0};
-    size_t rawdata_width_{0};
-    void *data_;
     int class_num_{0};
-    OpenvinoInferenceResult openvino_result_;
-    OpenvinoInference(file_name_t input_model, file_name_t input_image_path, std::string device_name);
-    OpenvinoInference(file_name_t input_model, int rawdata_height, int rawdata_width, std::string device_name,
-                      void *data);
-    ~OpenvinoInference();
-    bool Inference();
-
-  private:
-    ExecutableNetwork executable_network_;
-    Core ie_;
-    CNNNetwork network_;
-    InferRequest infer_request_;
-    bool ReadModel();
-    bool ConfigureInputOoutput();
-    void LoadingModel();
-    void CreateInferRequest();
-    bool PrepareInput();
-    void DoSyncInference();
-    void ProcessOutput();
 };

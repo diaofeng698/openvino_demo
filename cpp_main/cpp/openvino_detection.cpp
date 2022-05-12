@@ -1,23 +1,12 @@
 #include "openvino_detection.h"
 
-OpenvinoInference::OpenvinoInference(file_name_t input_model, file_name_t input_image_path, std::string device_name)
+OpenvinoInference::OpenvinoInference(file_name_t input_model, std::string device_name)
 {
-    input_model_ = input_model;
-    input_image_path_ = input_image_path;
-    device_name_ = device_name;
-    std::cout << "Openvino Inference Read From File " << std::endl;
-}
-
-OpenvinoInference::OpenvinoInference(file_name_t input_model, int rawdata_height, int rawdata_width,
-                                     std::string device_name, void *data)
-
-{
+    std::cout << "Openvino Inference Start Initialization " << std::endl;
     input_model_ = input_model;
     device_name_ = device_name;
-    rawdata_height_ = rawdata_height;
-    rawdata_width_ = rawdata_width;
-    data_ = data;
-    std::cout << "Openvino Inference Read From Data " << std::endl;
+    if (Initialization())
+        std::cout << "Openvino Initialization Failed, Please check ! " << std::endl;
 }
 
 OpenvinoInference::~OpenvinoInference()
@@ -25,19 +14,39 @@ OpenvinoInference::~OpenvinoInference()
     std::cout << "OpenvinoInference Destructor Finished! " << std::endl;
 }
 
-bool OpenvinoInference::Inference()
+bool OpenvinoInference::Initialization()
+{
+    if (ReadModel())
+        return EXIT_FAILURE;
+    if (ConfigureInputOutput())
+        return EXIT_FAILURE;
+    LoadingModel();
+    CreateInferRequest();
+    return EXIT_SUCCESS;
+}
+
+bool OpenvinoInference::Inference(file_name_t input_image_path)
 {
 
     struct timeval tv1, tv2;
     gettimeofday(&tv1, NULL);
+    if (PrepareInput(input_image_path))
+        return EXIT_FAILURE;
+    DoSyncInference();
+    ProcessOutput();
+    std::cout << "Openvino Inference Finished" << std::endl;
+    gettimeofday(&tv2, NULL);
+    double diff_time = ((double)(tv2.tv_usec - tv1.tv_usec) / 1000.0) + ((double)(tv2.tv_sec - tv1.tv_sec) * 1000.0);
+    std::cout << "Openvino Whole Infer Time [ms] : " << diff_time << std::endl;
+    return EXIT_SUCCESS;
+}
 
-    if (ReadModel())
-        return EXIT_FAILURE;
-    if (ConfigureInputOoutput())
-        return EXIT_FAILURE;
-    LoadingModel();
-    CreateInferRequest();
-    if (PrepareInput())
+bool OpenvinoInference::Inference(int rawdata_height, int rawdata_width, auto *rawdata)
+{
+
+    struct timeval tv1, tv2;
+    gettimeofday(&tv1, NULL);
+    if (PrepareInput(rawdata_height, rawdata_width, rawdata))
         return EXIT_FAILURE;
     DoSyncInference();
     ProcessOutput();
@@ -72,7 +81,7 @@ bool OpenvinoInference::ReadModel()
     return EXIT_SUCCESS;
 }
 
-bool OpenvinoInference::ConfigureInputOoutput()
+bool OpenvinoInference::ConfigureInputOutput()
 {
 
     // --------------------------- Prepare input blobs
@@ -112,9 +121,8 @@ void OpenvinoInference::CreateInferRequest()
     infer_request_ = executable_network_.CreateInferRequest();
 }
 
-bool OpenvinoInference::PrepareInput()
+bool OpenvinoInference::PrepareInput(int rawdata_height, int rawdata_width, auto *rawdata)
 {
-
     Blob::Ptr inputBlob = infer_request_.GetBlob(input_name_);
     SizeVector dims = inputBlob->getTensorDesc().getDims();
 
@@ -123,47 +131,18 @@ bool OpenvinoInference::PrepareInput()
     modeldata_width_ = dims[2];
     modeldata_num_channels_ = dims[3];
 
+    if (rawdata == nullptr)
+    {
+        std::cout << "Input Frame Load Failed, Please check !" << std::endl;
+        return EXIT_FAILURE;
+    }
+    std::cout << "raw inputH " << rawdata_height << " inputW " << rawdata_width << " inputChannel " << 3 << std::endl;
+    cv::Mat input_frame(rawdata_height, rawdata_width, CV_8UC3, rawdata);
+
     cv::Mat resized_img;
-
-    if (input_image_path_ == "")
-    {
-
-        if (data_ == nullptr)
-        {
-            std::cout << "Input Frame Load Failed, Please check !" << std::endl;
-            return EXIT_FAILURE;
-        }
-        std::cout << "raw inputH " << rawdata_height_ << " inputW " << rawdata_width_ << " inputChannel " << 3
-                  << std::endl;
-        cv::Mat input_frame(rawdata_height_, rawdata_width_, CV_8UC3, data_);
-
-        cv::resize(input_frame, resized_img, cv::Size(modeldata_width_, modeldata_height_));
-        std::cout << "resized inputH " << resized_img.rows << " inputW " << resized_img.cols << " inputChannel "
-                  << resized_img.channels() << std::endl;
-    }
-    else
-    {
-        if (access(input_image_path_.c_str(), F_OK) != -1)
-        {
-            cv::Mat input_file = imread_t(input_image_path_);
-            if (!input_file.data)
-            {
-                std::cout << "Image File Load Failed" << std::endl;
-                return EXIT_FAILURE;
-            }
-            std::cout << "raw inputH " << input_file.rows << " inputW " << input_file.cols << " inputChannel "
-                      << input_file.channels() << std::endl;
-
-            cv::resize(input_file, resized_img, cv::Size(modeldata_width_, modeldata_height_));
-            std::cout << "resized inputH " << resized_img.rows << " inputW " << resized_img.cols << " inputChannel "
-                      << resized_img.channels() << std::endl;
-        }
-        else
-        {
-            std::cout << "Image File Missed, Please check ! " << std::endl;
-            return EXIT_FAILURE;
-        }
-    }
+    cv::resize(input_frame, resized_img, cv::Size(modeldata_width_, modeldata_height_));
+    std::cout << "resized inputH " << resized_img.rows << " inputW " << resized_img.cols << " inputChannel "
+              << resized_img.channels() << std::endl;
 
     cv::Mat gray_img;
     cv::cvtColor(resized_img, gray_img, cv::COLOR_BGR2GRAY);
@@ -204,6 +183,84 @@ bool OpenvinoInference::PrepareInput()
                 data[b * volImg + idx * modeldata_num_channels_ + c] = gray_img.data[idx];
             }
         }
+    }
+
+    return EXIT_SUCCESS;
+}
+
+bool OpenvinoInference::PrepareInput(file_name_t input_image_path)
+{
+
+    Blob::Ptr inputBlob = infer_request_.GetBlob(input_name_);
+    SizeVector dims = inputBlob->getTensorDesc().getDims();
+
+    modeldata_batch_ = dims[0];
+    modeldata_height_ = dims[1];
+    modeldata_width_ = dims[2];
+    modeldata_num_channels_ = dims[3];
+
+    if (access(input_image_path.c_str(), F_OK) != -1)
+    {
+        cv::Mat input_file = imread_t(input_image_path);
+        if (!input_file.data)
+        {
+            std::cout << "Image File Load Failed" << std::endl;
+            return EXIT_FAILURE;
+        }
+        std::cout << "raw inputH " << input_file.rows << " inputW " << input_file.cols << " inputChannel "
+                  << input_file.channels() << std::endl;
+
+        cv::Mat resized_img;
+        cv::resize(input_file, resized_img, cv::Size(modeldata_width_, modeldata_height_));
+        std::cout << "resized inputH " << resized_img.rows << " inputW " << resized_img.cols << " inputChannel "
+                  << resized_img.channels() << std::endl;
+
+        cv::Mat gray_img;
+        cv::cvtColor(resized_img, gray_img, cv::COLOR_BGR2GRAY);
+        std::cout << "gray inputH " << gray_img.rows << " inputW " << gray_img.cols << " inputChannel "
+                  << gray_img.channels() << std::endl;
+
+        Blob::Ptr outputBlob = infer_request_.GetBlob(output_name_);
+        SizeVector output_dims = outputBlob->getTensorDesc().getDims();
+
+        class_num_ = output_dims[1];
+
+        MemoryBlob::Ptr minput = as<MemoryBlob>(inputBlob);
+        if (!minput)
+        {
+            std::cout << "We expect MemoryBlob from inferRequest, but by fact we "
+                         "were not able to cast inputBlob to MemoryBlob"
+                      << std::endl;
+            return EXIT_FAILURE;
+        }
+        // locked memory holder should be alive all time while access to its
+        // buffer happens
+        auto minputHolder = minput->wmap();
+
+        auto data = minputHolder.as<PrecisionTrait<Precision::FP32>::value_type *>();
+        if (data == nullptr)
+        {
+            throw std::runtime_error("Input blob has not allocated buffer");
+            return EXIT_FAILURE;
+        }
+
+        for (int b = 0, volImg = modeldata_num_channels_ * modeldata_height_ * modeldata_width_; b < modeldata_batch_;
+             b++)
+        {
+            for (int idx = 0, volChl = modeldata_height_ * modeldata_width_; idx < volChl; idx++)
+            {
+
+                for (int c = 0; c < modeldata_num_channels_; ++c)
+                {
+                    data[b * volImg + idx * modeldata_num_channels_ + c] = gray_img.data[idx];
+                }
+            }
+        }
+    }
+    else
+    {
+        std::cout << "Image File Missed, Please check ! " << std::endl;
+        return EXIT_FAILURE;
     }
 
     return EXIT_SUCCESS;

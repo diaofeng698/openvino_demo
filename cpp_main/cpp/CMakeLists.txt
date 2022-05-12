@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 project(openvino_detection)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 include_directories(
     ./common/utils/include/
     # /opt/intel/openvino_2021.4.752/deployment_tools/inference_engine/include/
