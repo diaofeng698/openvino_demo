@@ -27,7 +27,10 @@ bool OpenvinoInference::Initialization()
 
 bool OpenvinoInference::Inference(file_name_t input_image_path)
 {
-
+    if (infer_request_ == nullptr)
+    {
+        return EXIT_FAILURE;
+    }
     struct timeval tv1, tv2;
     gettimeofday(&tv1, NULL);
     if (PrepareInput(input_image_path))
@@ -43,6 +46,10 @@ bool OpenvinoInference::Inference(file_name_t input_image_path)
 
 bool OpenvinoInference::Inference(int rawdata_height, int rawdata_width, auto *rawdata)
 {
+    if (infer_request_ == nullptr)
+    {
+        return EXIT_FAILURE;
+    }
 
     struct timeval tv1, tv2;
     gettimeofday(&tv1, NULL);
@@ -59,6 +66,10 @@ bool OpenvinoInference::Inference(int rawdata_height, int rawdata_width, auto *r
 
 bool OpenvinoInference::Inference(cv::Mat image)
 {
+    if (infer_request_ == nullptr)
+    {
+        return EXIT_FAILURE;
+    }
     struct timeval tv1, tv2;
     gettimeofday(&tv1, NULL);
     if (PrepareInput(image))
@@ -133,13 +144,13 @@ void OpenvinoInference::LoadingModel()
 
 void OpenvinoInference::CreateInferRequest()
 {
-    infer_request_ = executable_network_.CreateInferRequest();
+    infer_request_ = executable_network_.CreateInferRequestPtr();
 }
 
 bool OpenvinoInference::PreProcessing(cv::Mat input)
 {
 
-    Blob::Ptr inputBlob = infer_request_.GetBlob(input_name_);
+    Blob::Ptr inputBlob = infer_request_->GetBlob(input_name_);
     SizeVector dims = inputBlob->getTensorDesc().getDims();
 
     modeldata_batch_ = dims[0];
@@ -157,7 +168,7 @@ bool OpenvinoInference::PreProcessing(cv::Mat input)
     std::cout << "gray inputH " << gray_img.rows << " inputW " << gray_img.cols << " inputChannel "
               << gray_img.channels() << std::endl;
 
-    Blob::Ptr outputBlob = infer_request_.GetBlob(output_name_);
+    Blob::Ptr outputBlob = infer_request_->GetBlob(output_name_);
     SizeVector output_dims = outputBlob->getTensorDesc().getDims();
 
     class_num_ = output_dims[1];
@@ -252,12 +263,12 @@ bool OpenvinoInference::PrepareInput(file_name_t input_image_path)
 void OpenvinoInference::DoSyncInference()
 {
     /* Running the request synchronously */
-    infer_request_.Infer();
+    infer_request_->Infer();
 }
 
 void OpenvinoInference::ProcessOutput()
 {
-    Blob::Ptr output = infer_request_.GetBlob(output_name_);
+    Blob::Ptr output = infer_request_->GetBlob(output_name_);
     // Print classification results
     ClassificationResult_t classificationResult(output, {input_image_path_}, modeldata_batch_, class_num_);
     classificationResult.print();

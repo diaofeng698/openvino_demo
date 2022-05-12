@@ -38,8 +38,8 @@ class OpenvinoInference
   private:
     Core ie_;
     CNNNetwork network_;
+    InferRequest::Ptr infer_request_;
     ExecutableNetwork executable_network_;
-    InferRequest infer_request_;
     bool ReadModel();
     bool ConfigureInputOutput();
     void LoadingModel();

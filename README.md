@@ -36,10 +36,10 @@
 
 ## CPP
 
-- cd \<YourFolder\>/openvino/cpp/build
+- cd \<YourFolder\>/openvino/cpp_main/build
 - cmake ..
 - make
-- ./classification_test ../model/model_DAD_3_7.xml ../model/phone_interact.jpg CPU
+- ./openvino_detection_main
 
 # Other
 
