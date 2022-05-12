@@ -121,8 +121,9 @@ void OpenvinoInference::CreateInferRequest()
     infer_request_ = executable_network_.CreateInferRequest();
 }
 
-bool OpenvinoInference::PrepareInput(int rawdata_height, int rawdata_width, auto *rawdata)
+bool OpenvinoInference::PreProcessing(cv::Mat input)
 {
+
     Blob::Ptr inputBlob = infer_request_.GetBlob(input_name_);
     SizeVector dims = inputBlob->getTensorDesc().getDims();
 
@@ -131,16 +132,8 @@ bool OpenvinoInference::PrepareInput(int rawdata_height, int rawdata_width, auto
     modeldata_width_ = dims[2];
     modeldata_num_channels_ = dims[3];
 
-    if (rawdata == nullptr)
-    {
-        std::cout << "Input Frame Load Failed, Please check !" << std::endl;
-        return EXIT_FAILURE;
-    }
-    std::cout << "raw inputH " << rawdata_height << " inputW " << rawdata_width << " inputChannel " << 3 << std::endl;
-    cv::Mat input_frame(rawdata_height, rawdata_width, CV_8UC3, rawdata);
-
     cv::Mat resized_img;
-    cv::resize(input_frame, resized_img, cv::Size(modeldata_width_, modeldata_height_));
+    cv::resize(input, resized_img, cv::Size(modeldata_width_, modeldata_height_));
     std::cout << "resized inputH " << resized_img.rows << " inputW " << resized_img.cols << " inputChannel "
               << resized_img.channels() << std::endl;
 
@@ -184,20 +177,25 @@ bool OpenvinoInference::PrepareInput(int rawdata_height, int rawdata_width, auto
             }
         }
     }
+}
+
+bool OpenvinoInference::PrepareInput(int rawdata_height, int rawdata_width, auto *rawdata)
+{
+    if (rawdata == nullptr)
+    {
+        std::cout << "Input Frame Load Failed, Please check !" << std::endl;
+        return EXIT_FAILURE;
+    }
+    std::cout << "raw inputH " << rawdata_height << " inputW " << rawdata_width << " inputChannel " << 3 << std::endl;
+    cv::Mat input_frame(rawdata_height, rawdata_width, CV_8UC3, rawdata);
+    if (PreProcessing(input_frame))
+        return EXIT_FAILURE;
 
     return EXIT_SUCCESS;
 }
 
 bool OpenvinoInference::PrepareInput(file_name_t input_image_path)
 {
-
-    Blob::Ptr inputBlob = infer_request_.GetBlob(input_name_);
-    SizeVector dims = inputBlob->getTensorDesc().getDims();
-
-    modeldata_batch_ = dims[0];
-    modeldata_height_ = dims[1];
-    modeldata_width_ = dims[2];
-    modeldata_num_channels_ = dims[3];
 
     if (access(input_image_path.c_str(), F_OK) != -1)
     {
@@ -209,53 +207,8 @@ bool OpenvinoInference::PrepareInput(file_name_t input_image_path)
         }
         std::cout << "raw inputH " << input_file.rows << " inputW " << input_file.cols << " inputChannel "
                   << input_file.channels() << std::endl;
-
-        cv::Mat resized_img;
-        cv::resize(input_file, resized_img, cv::Size(modeldata_width_, modeldata_height_));
-        std::cout << "resized inputH " << resized_img.rows << " inputW " << resized_img.cols << " inputChannel "
-                  << resized_img.channels() << std::endl;
-
-        cv::Mat gray_img;
-        cv::cvtColor(resized_img, gray_img, cv::COLOR_BGR2GRAY);
-        std::cout << "gray inputH " << gray_img.rows << " inputW " << gray_img.cols << " inputChannel "
-                  << gray_img.channels() << std::endl;
-
-        Blob::Ptr outputBlob = infer_request_.GetBlob(output_name_);
-        SizeVector output_dims = outputBlob->getTensorDesc().getDims();
-
-        class_num_ = output_dims[1];
-
-        MemoryBlob::Ptr minput = as<MemoryBlob>(inputBlob);
-        if (!minput)
-        {
-            std::cout << "We expect MemoryBlob from inferRequest, but by fact we "
-                         "were not able to cast inputBlob to MemoryBlob"
-                      << std::endl;
+        if (PreProcessing(input_file))
             return EXIT_FAILURE;
-        }
-        // locked memory holder should be alive all time while access to its
-        // buffer happens
-        auto minputHolder = minput->wmap();
-
-        auto data = minputHolder.as<PrecisionTrait<Precision::FP32>::value_type *>();
-        if (data == nullptr)
-        {
-            throw std::runtime_error("Input blob has not allocated buffer");
-            return EXIT_FAILURE;
-        }
-
-        for (int b = 0, volImg = modeldata_num_channels_ * modeldata_height_ * modeldata_width_; b < modeldata_batch_;
-             b++)
-        {
-            for (int idx = 0, volChl = modeldata_height_ * modeldata_width_; idx < volChl; idx++)
-            {
-
-                for (int c = 0; c < modeldata_num_channels_; ++c)
-                {
-                    data[b * volImg + idx * modeldata_num_channels_ + c] = gray_img.data[idx];
-                }
-            }
-        }
     }
     else
     {

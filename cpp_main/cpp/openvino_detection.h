@@ -43,6 +43,7 @@ class OpenvinoInference
     bool ConfigureInputOutput();
     void LoadingModel();
     void CreateInferRequest();
+    bool PreProcessing(cv::Mat input);
     bool PrepareInput(int rawdata_height, int rawdata_width, auto *rawdata);
     bool PrepareInput(file_name_t input_image_path);
     void DoSyncInference();
