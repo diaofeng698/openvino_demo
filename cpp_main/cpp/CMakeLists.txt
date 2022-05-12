@@ -16,7 +16,8 @@ find_package(ngraph REQUIRED)
 #set(ngraph_LIBRARIES "/opt/intel/openvino_2021.4.752/deployment_tools/ngraph/lib/")
 #set(ngraph_INCLUDE_DIRS "/opt/intel/openvino_2021.4.752/deployment_tools/ngraph/include/")
 
-add_executable(openvino_detection main.cpp openvino_detection.cpp)
+# add_executable(openvino_detection main.cpp openvino_detection.cpp)
+add_library(openvino_detection SHARED openvino_detection.cpp)
 
 target_include_directories(openvino_detection
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
