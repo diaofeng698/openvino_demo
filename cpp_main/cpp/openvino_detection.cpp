@@ -5,14 +5,7 @@ OpenvinoInference::OpenvinoInference(file_name_t input_model, file_name_t input_
     input_model_ = input_model;
     input_image_path_ = input_image_path;
     device_name_ = device_name;
-    std::cout << "Initial Successfully! " << std::endl;
-    struct timeval tv1, tv2;
-    gettimeofday(&tv1, NULL);
-    Inference();
-
-    gettimeofday(&tv2, NULL);
-    double diff_time = ((double)(tv2.tv_usec - tv1.tv_usec) / 1000.0) + ((double)(tv2.tv_sec - tv1.tv_sec) * 1000.0);
-    std::cout << "Openvino Whole Infer Time [ms] : " << diff_time << std::endl;
+    std::cout << "Openvino Inference Read From File " << std::endl;
 }
 
 OpenvinoInference::OpenvinoInference(file_name_t input_model, int rawdata_height, int rawdata_width,
@@ -24,22 +17,19 @@ OpenvinoInference::OpenvinoInference(file_name_t input_model, int rawdata_height
     rawdata_height_ = rawdata_height;
     rawdata_width_ = rawdata_width;
     data_ = data;
-    std::cout << "Initial Successfully! " << std::endl;
-    struct timeval tv1, tv2;
-    gettimeofday(&tv1, NULL);
-    Inference();
-    gettimeofday(&tv2, NULL);
-    double diff_time = ((double)(tv2.tv_usec - tv1.tv_usec) / 1000.0) + ((double)(tv2.tv_sec - tv1.tv_sec) * 1000.0);
-    std::cout << "Openvino Whole Infer Time [ms] : " << diff_time << std::endl;
+    std::cout << "Openvino Inference Read From Data " << std::endl;
 }
 
 OpenvinoInference::~OpenvinoInference()
 {
-    std::cout << "Destructor Finished! " << std::endl;
+    std::cout << "OpenvinoInference Destructor Finished! " << std::endl;
 }
 
 bool OpenvinoInference::Inference()
 {
+
+    struct timeval tv1, tv2;
+    gettimeofday(&tv1, NULL);
 
     if (ReadModel())
         return EXIT_FAILURE;
@@ -52,20 +42,31 @@ bool OpenvinoInference::Inference()
     DoSyncInference();
     ProcessOutput();
     std::cout << "Openvino Inference Finished" << std::endl;
+    gettimeofday(&tv2, NULL);
+    double diff_time = ((double)(tv2.tv_usec - tv1.tv_usec) / 1000.0) + ((double)(tv2.tv_sec - tv1.tv_sec) * 1000.0);
+    std::cout << "Openvino Whole Infer Time [ms] : " << diff_time << std::endl;
     return EXIT_SUCCESS;
 }
 
 bool OpenvinoInference::ReadModel()
 {
-    network_ = ie_.ReadNetwork(input_model_);
-    if (network_.getOutputsInfo().size() != 1)
+    if (access(input_model_.c_str(), F_OK) != -1)
     {
-        throw std::logic_error("Sample supports topologies with 1 output only");
-        return EXIT_FAILURE;
+        network_ = ie_.ReadNetwork(input_model_);
+        if (network_.getOutputsInfo().size() != 1)
+        {
+            throw std::logic_error("Sample supports topologies with 1 output only");
+            return EXIT_FAILURE;
+        }
+        if (network_.getInputsInfo().size() != 1)
+        {
+            throw std::logic_error("Sample supports topologies with 1 input only");
+            return EXIT_FAILURE;
+        }
     }
-    if (network_.getInputsInfo().size() != 1)
+    else
     {
-        throw std::logic_error("Sample supports topologies with 1 input only");
+        std::cout << "Model File Missed, Please check ! " << std::endl;
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;
@@ -129,7 +130,7 @@ bool OpenvinoInference::PrepareInput()
 
         if (data_ == nullptr)
         {
-            std::cout << "Input Frame Load Failed" << std::endl;
+            std::cout << "Input Frame Load Failed, Please check !" << std::endl;
             return EXIT_FAILURE;
         }
         std::cout << "raw inputH " << rawdata_height_ << " inputW " << rawdata_width_ << " inputChannel " << 3
@@ -142,18 +143,26 @@ bool OpenvinoInference::PrepareInput()
     }
     else
     {
-        cv::Mat input_file = imread_t(input_image_path_);
-        if (!input_file.data)
+        if (access(input_image_path_.c_str(), F_OK) != -1)
         {
-            std::cout << "Image File Load Failed" << std::endl;
+            cv::Mat input_file = imread_t(input_image_path_);
+            if (!input_file.data)
+            {
+                std::cout << "Image File Load Failed" << std::endl;
+                return EXIT_FAILURE;
+            }
+            std::cout << "raw inputH " << input_file.rows << " inputW " << input_file.cols << " inputChannel "
+                      << input_file.channels() << std::endl;
+
+            cv::resize(input_file, resized_img, cv::Size(modeldata_width_, modeldata_height_));
+            std::cout << "resized inputH " << resized_img.rows << " inputW " << resized_img.cols << " inputChannel "
+                      << resized_img.channels() << std::endl;
+        }
+        else
+        {
+            std::cout << "Image File Missed, Please check ! " << std::endl;
             return EXIT_FAILURE;
         }
-        std::cout << "raw inputH " << input_file.rows << " inputW " << input_file.cols << " inputChannel "
-                  << input_file.channels() << std::endl;
-
-        cv::resize(input_file, resized_img, cv::Size(modeldata_width_, modeldata_height_));
-        std::cout << "resized inputH " << resized_img.rows << " inputW " << resized_img.cols << " inputChannel "
-                  << resized_img.channels() << std::endl;
     }
 
     cv::Mat gray_img;

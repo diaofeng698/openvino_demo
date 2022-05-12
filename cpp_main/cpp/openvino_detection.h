@@ -1,14 +1,13 @@
-#include <samples/classification_results.h>
-
 #include <inference_engine.hpp>
 #include <iterator>
 #include <memory>
+#include <samples/classification_results.h>
 #include <samples/common.hpp>
 #include <samples/ocv_common.hpp>
 #include <string>
 #include <sys/time.h>
+#include <unistd.h>
 #include <vector>
-
 using namespace InferenceEngine;
 
 #define tcout std::cout
@@ -43,6 +42,7 @@ class OpenvinoInference
     OpenvinoInference(file_name_t input_model, int rawdata_height, int rawdata_width, std::string device_name,
                       void *data);
     ~OpenvinoInference();
+    bool Inference();
 
   private:
     ExecutableNetwork executable_network_;
@@ -56,5 +56,4 @@ class OpenvinoInference
     bool PrepareInput();
     void DoSyncInference();
     void ProcessOutput();
-    bool Inference();
 };
