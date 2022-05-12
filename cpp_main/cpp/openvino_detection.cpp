@@ -57,6 +57,21 @@ bool OpenvinoInference::Inference(int rawdata_height, int rawdata_width, auto *r
     return EXIT_SUCCESS;
 }
 
+bool OpenvinoInference::Inference(cv::Mat image)
+{
+    struct timeval tv1, tv2;
+    gettimeofday(&tv1, NULL);
+    if (PrepareInput(image))
+        return EXIT_FAILURE;
+    DoSyncInference();
+    ProcessOutput();
+    std::cout << "Openvino Inference Finished" << std::endl;
+    gettimeofday(&tv2, NULL);
+    double diff_time = ((double)(tv2.tv_usec - tv1.tv_usec) / 1000.0) + ((double)(tv2.tv_sec - tv1.tv_sec) * 1000.0);
+    std::cout << "Openvino Whole Infer Time [ms] : " << diff_time << std::endl;
+    return EXIT_SUCCESS;
+}
+
 bool OpenvinoInference::ReadModel()
 {
     if (access(input_model_.c_str(), F_OK) != -1)
@@ -189,6 +204,21 @@ bool OpenvinoInference::PrepareInput(int rawdata_height, int rawdata_width, auto
     std::cout << "raw inputH " << rawdata_height << " inputW " << rawdata_width << " inputChannel " << 3 << std::endl;
     cv::Mat input_frame(rawdata_height, rawdata_width, CV_8UC3, rawdata);
     if (PreProcessing(input_frame))
+        return EXIT_FAILURE;
+
+    return EXIT_SUCCESS;
+}
+
+bool OpenvinoInference::PrepareInput(cv::Mat image)
+{
+    if (image.data == nullptr)
+    {
+        std::cout << "Input Image Load Failed, Please check !" << std::endl;
+        return EXIT_FAILURE;
+    }
+    std::cout << "raw inputH " << image.rows << " inputW " << image.cols << " inputChannel " << image.channels()
+              << std::endl;
+    if (PreProcessing(image))
         return EXIT_FAILURE;
 
     return EXIT_SUCCESS;

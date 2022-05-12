@@ -8,7 +8,6 @@ int main()
 
     OpenvinoInference *infer;
     infer = new OpenvinoInference(input_model, device_name);
-    // infer = std::make_unique<OpenvinoInference>(input_model, input_image_path, device_name);
     infer->Inference(input_image_path);
     return 0;
 }

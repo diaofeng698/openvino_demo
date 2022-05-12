@@ -33,6 +33,7 @@ class OpenvinoInference
     bool Initialization();
     bool Inference(int rawdata_height, int rawdata_width, auto *rawdata);
     bool Inference(file_name_t input_image_path);
+    bool Inference(cv::Mat image);
 
   private:
     Core ie_;
@@ -44,6 +45,7 @@ class OpenvinoInference
     void LoadingModel();
     void CreateInferRequest();
     bool PreProcessing(cv::Mat input);
+    bool PrepareInput(cv::Mat image);
     bool PrepareInput(int rawdata_height, int rawdata_width, auto *rawdata);
     bool PrepareInput(file_name_t input_image_path);
     void DoSyncInference();
