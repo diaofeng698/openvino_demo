@@ -16,6 +16,7 @@ OpenvinoInference::~OpenvinoInference()
 
 bool OpenvinoInference::Initialization()
 {
+
     if (ReadModel())
         return EXIT_FAILURE;
     if (ConfigureInputOutput())
