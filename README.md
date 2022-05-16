@@ -24,11 +24,18 @@
 # ONNX Model Convert
 
 - cd /opt/intel/openvino_2021/deployment_tools/model_optimizer
-- python mo_onnx.py --input_model /home/fdiao/dl_cv/OpenVINO/model/model_DAD_3_7.onnx --output_dir /home/fdiao/dl_cv/OpenVINO/model/ --input_shape [1,224,224,3]
+- python mo_onnx.py --input_model /home/fdiao/dl_cv/OpenVINO/openvino/python/model/model_DAD_3_7.onnx --output_dir /home/fdiao/dl_cv/OpenVINO/openvino/python/model --model_name *** --input_shape [1,224,224,3]
 
 # Run Our MobileNet
 
 ## Python
+
+### Python Run Env
+
+- cd /opt/intel/openvino_2021/deployment_tools/inference_engine/samples/python
+- python -m pip install -r requirements.txt
+
+### Python Demo
 
 - cd \<YourFolder\>/openvino/python
 

@@ -77,12 +77,17 @@ def main():
     start = time.time()
     original_image = cv2.imread(args.input)
     image = original_image.copy()
+    print(image.shape)
     _, h, w, _ = net.input_info[input_blob].input_data.shape
+
+    print(net.input_info[input_blob].input_data.shape[0], net.input_info[input_blob].input_data.shape[1],
+          net.input_info[input_blob].input_data.shape[2], net.input_info[input_blob].input_data.shape[3])
 
     if image.shape[:-1] != (h, w):
         log.warning(
             f'Image {args.input} is resized from {image.shape[:-1]} to {(h, w)}')
         image = cv2.resize(image, (w, h))
+        print(image.shape)
 
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     print(image.shape)
